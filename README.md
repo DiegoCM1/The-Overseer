@@ -38,3 +38,7 @@ The Action: A direct line to your phone. When the Brain decides you need a kick 
 The Tech: Modern Frontend stack. A place where you can modify the system prompt, allow/prohib using tools, see stats, define the black list, etc.
 
 The Action: A clean, "elite" interface that displays your productivity metrics and blacklists. It’s where you face the data of your "Shame Stats" and manage what counts as a distraction.
+
+
+## Considerations
+- API Key will be hardcoded, for me to choose the best model, and if a user wants to use it, they can pay or get a free trial. In the future we'll add the feature of entering your own api key
