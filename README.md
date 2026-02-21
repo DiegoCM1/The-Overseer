@@ -1,11 +1,8 @@
 # The-Overseer
 The Summary: What it Does
 The Overseer monitors your browser activity in real-time. If it detects you’re wasting time (Reels, YouTube, etc.) when you should be in "Laptop Mode" or "Deep Work," it executes a "Corrective Action."
-
 Detection: It identifies when you stray from your "Blacklist."
-
 Social Shame: It sends you insults or "reverse psychology" roasts via WhatsApp.
-
 Accountability: It tracks your "Shame Stats" on a dashboard for you to see how much of a "villain" your distractions are.
 
 ## Stack:
@@ -13,6 +10,8 @@ LangGraph
 FastAPI + Pydantic
 Nextjs
 TS
+
+Tracking: subprocess
 
 ## How it works
 1. The Eye (Dynamic Polling)
@@ -42,3 +41,7 @@ The Action: A clean, "elite" interface that displays your productivity metrics a
 
 ## Considerations
 - API Key will be hardcoded, for me to choose the best model, and if a user wants to use it, they can pay or get a free trial. In the future we'll add the feature of entering your own api key
+
+
+## Next possible optimizations
+-  Only execute the tracking/polling when chrome is open, not every wake moment of the laptop.
