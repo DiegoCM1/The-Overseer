@@ -3,6 +3,7 @@ import time
 import subprocess
 import json
 from tracker.schemas import BrowserEvent
+from pathlib import Path 
 
 
 def get_browser_data():
@@ -23,18 +24,21 @@ def get_browser_data():
     title = result_title.stdout.strip()
 
     if not url or not title:
-        return None, None # Finish the
+        return None, None # Return empty values if not used 
 
     return url, title
 
 # Defining what is the json.
-blacklist = '../core/blacklist.json'
+BLACKLIST_PATH = Path(__file__).parent.parent / "core" / "blacklist.json"
 
 def load_blacklist():
     try: 
         with open(blacklist, 'r') as file:
             # Convert JSON into dict
             return json.load(file)
+    
+    except FileNotFoundError:
+        return []
 
 # Main function
 def start_monitoring():
@@ -44,7 +48,9 @@ def start_monitoring():
     # Read blacklist
 
     while True:
-        get_browser_data():
+        get_browser_data()
+
+        load_blacklist()
 
         if url
 
