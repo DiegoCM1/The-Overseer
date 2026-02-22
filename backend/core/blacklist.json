@@ -1,3 +1,22 @@
 {
-    
+    "sites": [
+        {
+            "id": 1,
+            "name": "Agar.io",
+            "url": "http://agar.io/",
+            "isPublic": true
+        },
+        {
+            "id": 2,
+            "name": "GitHub",
+            "url": "https://github.com",
+            "isPublic": true
+        },
+        {
+            "id": 3,
+            "name": "YT",
+            "url": "https://www.youtube.com/",
+            "isPublic": true
+        }
+    ]
 }

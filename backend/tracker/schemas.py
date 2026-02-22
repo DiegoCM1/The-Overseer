@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-import datetime from datetime
+from datetime import datetime
 
 class BrowserEvent(BaseModel):
     active_url: str
