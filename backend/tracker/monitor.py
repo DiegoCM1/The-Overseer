@@ -13,7 +13,13 @@ def load_blacklist():
     try: 
         with open(BLACKLIST_PATH, 'r') as file:
             # Convert JSON into dict
-            return json.load(file)
+            json_file = json.load(file)
+            blacklist = json_file["sites"]
+            print(f"Retrieved json: {json_file}")
+            print(f"Retrieved blacklist: {blacklist}")
+
+            return blacklist
+
     
     except FileNotFoundError:
         return []
@@ -49,6 +55,8 @@ def start_monitoring():
     duration = 0
     active_tab_title = None
 
+    sleep_time = 5
+
     # Read blacklist
     blacklist = load_blacklist()
     
@@ -68,6 +76,7 @@ def start_monitoring():
 
         # URL in blacklist
         if url in blacklist: 
+            print("Url in blacklist!")
             url_in_blacklist = True
             # Not the same URL
             if last_url != url:
@@ -82,42 +91,19 @@ def start_monitoring():
             
             event = BrowserEvent(
                 active_url=url,
-                start_time=datetime,
-                duration_seconds=float,
+                start_time=start_time,
+                duration_seconds=duration,
                 url_in_blacklist=url_in_blacklist,
                 active_tab_title=title,
                 browser=browser,
             )
         
-        time.sleep(60)
+        time.sleep(sleep_time)
+        print(f"Sleeping for {sleep_time} seconds")
 
 
 start_monitoring()
-
-
-
-
-
-# start_time = none
-# last_url = none
-
-#     while true:
-#         # Apple script
-#         Call applescript, obtain required data fields.
-
-#         # Decision logic. 
-#         If URL in blacklist:
-#             check if new url
-#             if new url:
-#                 duration 0
-#                 start_time now
-#             else:
-#                 calculate duration based on start_time
-#                 update last_url
-#             send browser event
-#         else:
-#             duration = 0
-#             update last url
-
-#         #Sleep 60 s
         
+# Security/Stability for importing
+if __name__ == "__main__":
+    main()
