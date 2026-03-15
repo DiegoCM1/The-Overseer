@@ -45,3 +45,42 @@ The Action: A clean, "elite" interface that displays your productivity metrics a
 
 ## Next possible optimizations
 -  Only execute the tracking/polling when chrome is open, not every wake moment of the laptop.
+
+
+-----
+
+GH Streak tracker
+
+Stack:
+Ntfy for notifications on phone
+Widget Android for displaying streak
+GitHub Actions for sending the data to our script containing the AI
+AI langgraph analizing the diff on the commit done to check if its worthy or just a trashy commit, Using openrouter for free shit.
+Endpoint sending decision from AI to db, and widget getting information from it or from the db itself.
+
+
+[High Priority] The Sensor: Get a script that can accurately say "Yes/No" to "Did Diego commit today?"
+
+[High Priority] The Mouth (ntfy): Connect that "Yes/No" to a simple notification. This is your immediate replacement for the Duolingo owl.
+
+[Mid Priority] The Brain (LangGraph): Add the Llama 3 personality. Instead of "0 commits," it should say, "Your 741-day discipline is rotting, Diego. Fix the square." or What is the current streak, having personal info about me as well.
+
+[Low Priority] The Eye (Custom Widget): For now, just pin the GitHub widget to your home screen. It’s 0 effort and 100% effective. ✅
+
+---
+Trigger 1: on push  → "You did it, you are amazing, keep the x stuff going"                                                 
+  Trigger 2: scheduled → "If no commits, 3 messages per day, once 10 am, 6pm and 11pm Roast or
+  remind accordingly"
+
+
+
+
+    GitHub Actions triggers main.py
+    → main.py calls GitHub API → gets commit diff
+    → main.py passes diff to LangGraph (ai/graph.py)
+    → LangGraph returns a message string
+    → main.py passes string to ntfy.py
+    → ntfy.py POSTs to ntfy.sh → Pixel gets notification
+
+  main.py is the orchestrator. It calls the other modules. It doesn't contain the AI — it
+   calls it.
