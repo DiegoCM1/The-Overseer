@@ -3,6 +3,10 @@ import json
 import os
 
 
+event_path = os.environ["GITHUB_EVENT_PATH"]
+with open(event_path) as f:
+    payload = json.load(f)
+
 #   So get_commit_data() needs to:
 #   1. Read that JSON file from the env var
 #   2. Extract commits, timestamp, repo name

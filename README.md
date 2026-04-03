@@ -53,8 +53,9 @@ GH Streak tracker
 
 Stack:
 Ntfy for notifications on phone
-Widget Android for displaying streak
-GitHub Actions for sending the data to our script containing the AI
+Widget Android for displaying streak. Using regular GH widget, in the future create custom.
+GitHub Actions for se
+nding the data to our script containing the AI
 AI langgraph analizing the diff on the commit done to check if its worthy or just a trashy commit, Using openrouter for free shit.
 Endpoint sending decision from AI to db, and widget getting information from it or from the db itself.
 
