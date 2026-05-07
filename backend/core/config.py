@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     TWILIO_WHATSAPP_FROM:str                                                
     TWILIO_WHATSAPP_TO:str
 
+    # GH Streak streak_tracker
+    GITHUB_TOKEN: str
+
     class Config:
         env_file = BASE_DIR / ".env"
 
