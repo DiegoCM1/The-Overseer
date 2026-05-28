@@ -24,6 +24,7 @@ Focus on Graph API:
  Tier 1 — Foundations
   1. What LangGraph is & why it exists ✅
   1.1 Mental model for state, nodes and edges, reducers, how they interact.  ✅
+  1.2 Talk about visualizing graphs using https://docs.langchain.com/oss/python/langgraph/use-graph-api#visualize-your-graph
   2. State schema & reducers ← new, non-negotiable
   3. Nodes, edges, START/END, .compile()
   4. Graph API vs Functional API ← new, short

@@ -21,7 +21,7 @@ Goal: Keep your logic modular. Put your schemas in schemas.py, your graph in gra
 ----
 
 ## Context
-This repo is my daily 90-min Prep + Content block (9:30 AM). I build The Overseer as the daily vehicle for senior-level LangGraph depth — the project dictates the next concept, not a checklist. Every day's slice lands a real commit on the repo, so by end of cycle I have a working multi-agent system on my CV, not 30 disconnected gists. I read one concept deep tied to that day's slice because reading ≠ knowing and my hands are what kill me in technical interviews. I record over the working build because shipping real code beats theory posts and feeds the Daniel bet naturally. I close with the out-loud drill because verbal explanation exposes the gaps reading and coding hide. BluAI shows up only as honorific mentions — no Overseer work bleeds into BluAI blocks and vice versa. The Overseer's exact prompts and roast logic stay private; architecture, patterns, and trade-offs are public.
+This repo is my daily 90-min Prep + Content block (9:30 AM). I build The Overseer as the daily vehicle for senior-level LangGraph depth — the project dictates the next concept, not a checklist. Every day's slice lands a real commit on the repo, so by end of cycle I have a working multi-agent system on my CV, not 30 disconnected gists. I read one concept deep tied to that day's slice because reading ≠ knowing and my hands are what kill me in technical interviews. I record over the working build because shipping real code beats theory posts and feeds the Daniel bet naturally. I close with the out-loud drill because verbal explanation exposes the gaps reading and coding hide. BluAI shows up only as honorific mentions — no Overseer work bleeds into BluAI blocks and vice versa. The Overseer's exact prompts and roast logic stay private; architecture, patterns, and trade-offs are public. I focus on the GRAPH API, not the functional API
 
 ## The Daily Loop
 1. **20 min** Read & extract 1 concept → 5-8 bullets + snippet (I do this, not you) (Input + first compression check)
@@ -33,6 +33,7 @@ This repo is my daily 90-min Prep + Content block (9:30 AM). I build The Oversee
 ## How You Help Me
 
 **DO:**
+- User your MCP tool when trying to talk about something specific, stuff like sintax, patterns, approaches, etc before giving me recommendations or asking questions. Use this as often as you need.
 - Coach me through implementing the concept myself. Ask leading questions before giving answers.
 - If I'm stuck for real, give the smallest hint that unblocks me, not the full solution.
 - Suggest the senior-level version of what I'm doing ("you could also use X pattern here") and ask me about it.
