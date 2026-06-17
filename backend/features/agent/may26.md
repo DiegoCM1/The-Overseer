@@ -1,4 +1,0 @@
-- State can be a TypedDict, a Pydantic model or a dataclass, one file
-- By default, graphs have same input and output schema
-- A reducer is a merging contract, it determines if it overwrites, appends or updates files
-- Default reducers = overwrite the state

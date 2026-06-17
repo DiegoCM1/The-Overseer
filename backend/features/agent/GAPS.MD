@@ -1,0 +1,2 @@
+- If a big tool ecosystem, you can use tool_search which will load all tools only when necessary, saving tokens and everything
+- We define tools before creating the agent, we test tools on isolation, this way we can debug easier since there are less moving parts
