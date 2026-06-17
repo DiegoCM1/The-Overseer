@@ -39,7 +39,6 @@ tools = [
 
 def get_current_datetime(timezone):
     current_timezone = ZoneInfo(timezone)
-    print(f"Timezon obtained: {current_timezone}")
     current_time = datetime.now(current_timezone)
     string_current_time = str(current_time)
 
@@ -52,9 +51,9 @@ def do_math(expression:str):
     return result_str
 
 
-
-print(do_math("2*2*2*5"))
-print (get_current_datetime('Asia/Tokyo')) #Debug
+# DEBUGGING/TESTING
+# print(do_math("2*2*2*5"))
+# print (get_current_datetime('Asia/Tokyo')) #Debug
 
 
 
