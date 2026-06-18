@@ -6,3 +6,9 @@
 5. Notoin API KEY (the eyes)                                                                                 
 6. Twilio client (the mouth)                                                                                    
 7. APScheduler (the heartbeat) 
+
+----
+
+1. Create send_whatsapp tool ⭐️
+2. Create tool to query pending tasks
+3. Create tool to check/uncheck tasks
