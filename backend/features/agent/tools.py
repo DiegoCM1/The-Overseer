@@ -1,5 +1,9 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+from core.config import settings
+
 
 
 # TOOL DEFINITIONS
@@ -34,6 +38,21 @@ tools = [
             "required": ["expression"],
         },
     }, 
+        {
+        "type": "function",
+        "name": "send_whatsapp",
+        "description": "Send a message using WA",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "whatsapp_message": {
+                    "type": "string",
+                    "description": "Anything you want to say to the user over WhatsApp"
+                },
+            },
+            "required": ["whatsapp_message"],
+        },
+    }, 
 ]
 
 
@@ -51,9 +70,27 @@ def do_math(expression:str):
     return result_str
 
 
+def send_whatsapp(message:str):
+    try:
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
+        client = Client(account_sid, auth_token)
+
+        response = client.messages.create(
+        from_='whatsapp:+14155238886',
+        body=message,
+        to='whatsapp:+5217151459328'
+        )
+    except TwilioRestException as e:
+        return f"Twilio error: {str(e)}"
+    except Exception as e:
+        return f"Unexpected error: {str(e)}"
+
+
 # DEBUGGING/TESTING
 # print(do_math("2*2*2*5"))
 # print (get_current_datetime('Asia/Tokyo')) #Debug
+# print(send_whatsapp("Hi, how you fucking doing? 3"))
 
 
 

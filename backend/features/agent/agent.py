@@ -1,6 +1,6 @@
 import json
 from openai import OpenAI
-from features.agent.tools import tools, get_current_datetime, do_math
+from features.agent.tools import tools, get_current_datetime, do_math, send_whatsapp
 from core.config import settings
 
 # Start client, use OpenRouter
@@ -15,7 +15,7 @@ client = OpenAI(
 messages = [
     { 
         "role": "user",
-        "content": "Tell me the current time in Tokyo, also, tell me what's the result of 8*8+5+31-99"
+        "content": "Tell me the current time in Tokyo, also, tell me what's the result of 8*8+5+31-99, sent me the reponse over WA"
     }
 ]
 
@@ -55,6 +55,16 @@ while not finished:
                 })
                 print("Executed get_current_datetime")
 
+            if item.name == "send_whatsapp":
+                whatsapp_message = json.loads(item.arguments)["whatsapp_message"]
+                sent_whatsapp_message = send_whatsapp(whatsapp_message)        
+                # Append tool results
+                messages.append({
+                    "type": "function_call_output",
+                    "call_id": item.call_id,
+                    "output": sent_whatsapp_message
+                })
+                print("Executed send_whatsapp")
 
             if item.name == "do_math":
                 expression = json.loads(item.arguments)["expression"]
