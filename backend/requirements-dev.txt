@@ -1,0 +1,2 @@
+# Dev/test only. Install with: pip install -r requirements-dev.txt
+pytest
