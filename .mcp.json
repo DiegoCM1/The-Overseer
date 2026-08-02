@@ -3,6 +3,10 @@
         "docs-langchain": {
             "type": "http",
             "url": "https://docs.langchain.com/mcp"
+        },
+        "supabase": {
+            "type": "http",
+            "url": "https://mcp.supabase.com/mcp?project_ref=faszopnagwwdgvzwdwbf"
         }
     }
 }

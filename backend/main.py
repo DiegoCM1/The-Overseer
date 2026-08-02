@@ -4,30 +4,37 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from core.config import settings
-from core.db import Base, engine
+from core.db import safe_db_url
+from core.logging_config import setup_logging
 from core.scheduler import start_scheduler, stop_scheduler
 from features.monitor.models import Notification  # noqa: F401  (registers the table)
 from features.monitor.service import tick
-from features.tasks.models import Tasks  # noqa: F401  (registers the table)
 from features.voice.router import router as voice_router
 
-logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("overseer")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # STARTUP
-    print("🟢 Initializing resources...")
-    Base.metadata.create_all(engine)
-    print("Created all tables in db")
+    setup_logging(settings.LOG_LEVEL)
+
+    # Schema is owned by Alembic (`alembic upgrade head`), NOT by the app.
+    # create_all() used to run here; it was blocking DDL on the event loop and it
+    # could only ever CREATE, never ALTER — so any column change silently drifted.
+    log.info("Starting Overseer (env=%s, db=%s)", settings.APP_ENV, safe_db_url())
+
     start_scheduler()
-    yield
-    # SHUTDOWN
-    print("🔴 Shutting down...")
-    stop_scheduler()
+    try:
+        yield
+    finally:
+        # SHUTDOWN — in `finally` so the scheduler is stopped even if startup
+        # or the app body raises. A leaked scheduler thread keeps firing Twilio.
+        log.info("Shutting down Overseer")
+        stop_scheduler()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(title="The Overseer", lifespan=lifespan)
 app.include_router(voice_router)
 
 

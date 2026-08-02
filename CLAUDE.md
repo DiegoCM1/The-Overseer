@@ -1,50 +1,106 @@
-The project summary:
+# The Overseer
 
-1. Data Integrity (The Pydantic Pillar)
-Focus: Stop treating data like "just strings." Use Pydantic to enforce rules.
-Goal: If your polling script sends a URL that is malformed or missing a timestamp, your API should reject it instantly with a clear error. This shows you care about system stability.
+## What this is
 
-2. Stateful Logic (The LangGraph Pillar)
-Focus: Move beyond "Prompt -> Response."
-Goal: Build a Stateful Graph. The agent should "remember" its previous roasts. If you’ve been on YouTube for 20 minutes, the insult should escalate. Managing State is what separates AI hobbyists from AI Engineers.
+An accountability enforcement system for a real bet between Diego and his
+brother Daniel. It is NOT a task nagger and NOT a browsing monitor.
 
-3. Concurrency (The FastAPI Pillar) 
-Focus: Master async/await.
-Goal: Your API shouldn't hang while waiting for Llama 3 to generate a roast. You need to learn how to hand that off to a Background Task so the system stays responsive. This is the definition of "at scale."
+## The contract it enforces
 
-4. System Architecture (The "Senior" Mindset)
-Focus: Separating concerns.
-Goal: Keep your logic modular. Put your schemas in schemas.py, your graph in graph.py, and your API routes in main.py. This proves you can work in a team and write maintainable code.
+- Obligation: 1 video published on X per weekday (Mon-Fri)
+- Deadline: 2:00 PM America/Mexico_City
+- Miss = 200 MXN owed, Diego -> Daniel
+- Streak: +1 per CALENDAR day (Mon-Sun). Any weekday miss resets to 0.
+  Weekends require no post but do advance the streak.
+- 30 consecutive days clean = Daniel does Diego's chores for 3 days
+- No exceptions. Illness, travel, technical failure all count as misses.
 
+## Design principle (this dictates every decision)
 
+The adversary is the author. Diego owns this code and has a financial
+incentive to find loopholes. The goal is not to make cheating impossible —
+it is to make every cheat require a deliberate, visible act. Cheating must
+never be a side effect of a bug or of laziness.
 
-----
+Consequences that are NOT negotiable:
 
-## Context
-This repo is my daily 90-min Prep + Content block (9:30 AM). I build The Overseer as the daily vehicle for senior-level LangGraph depth — the project dictates the next concept, not a checklist. Every day's slice lands a real commit on the repo, so by end of cycle I have a working multi-agent system on my CV, not 30 disconnected gists. I read one concept deep tied to that day's slice because reading ≠ knowing and my hands are what kill me in technical interviews. I record over the working build because shipping real code beats theory posts and feeds the Daniel bet naturally. I close with the out-loud drill because verbal explanation exposes the gaps reading and coding hide. BluAI shows up only as honorific mentions — no Overseer work bleeds into BluAI blocks and vice versa. The Overseer's exact prompts and roast logic stay private; architecture, patterns, and trade-offs are public. I focus on the GRAPH API, not the functional API
+- DEFAULT STATE IS FAILURE. Absence of evidence is a miss.
+- The verdict function is pure and deterministic: (evidence, now) -> PASS|FAIL.
+  NO LLM in the verdict path, ever. An LLM verdict is a judge that can be
+  argued with.
+- Streak is DERIVED by folding an append-only event log. It is never stored
+  as a mutable integer. There is no endpoint, script, or admin path that
+  writes a streak value.
+- The ONLY way a fact enters the system is Diego submitting a post URL.
+- A dead server must be louder than a working one. Liveness is verified by
+  an external service Diego does not control.
+- LLM output is confined to message copy. It decides nothing.
 
-## The Daily Loop
-1. **20 min** Read & extract 1 concept → 5-8 bullets + snippet (I do this, not you) (Input + first compression check)
-2. **45 min** Build working repro from scratch (your job is to coach, not to write) (Understanding, internalize by doing)
-3. **10 min** Out-loud drill (Understanding test, if can't then the thing hasn't been learned yet)
-4. **15 min** Record 60-sec OBS video over the working code
-5. **5 min** Flashcards from the session if important.
+## What is out of scope right now
 
-## How You Help Me
+LangGraph, the AppleScript browser monitor, the Next.js dashboard, phone-call
+escalation. Do not add them. A minimal graph exists on the `basic-mvp` branch
+for later.
 
-**DO:**
-- User your MCP tool when trying to talk about something specific, stuff like sintax, patterns, approaches, etc before giving me recommendations or asking questions. Use this as often as you need.
-- Coach me through implementing the concept myself. Ask leading questions before giving answers.
-- If I'm stuck for real, give the smallest hint that unblocks me, not the full solution.
-- Suggest the senior-level version of what I'm doing ("you could also use X pattern here") and ask me about it.
-- Help me write the README (5-8 bullets + what I built + gotchas) at the end.
+---
 
-**DON'T:**
-- Write the implementation for me. Hands on keyboard = me. This is the muscle I'm building.
-- Give generic "here's how LangGraph works" lectures. Tie everything to the specific code I'm writing right now.
-- Skip the "why" — I'm here to understand patterns, not copy code.
+## Current state of the code (read this before planning work)
 
-## Rules of Engagement
-- If I'm about to commit a concept that's bigger than 90 min of work, tell me to split it.
-- Default explanations to senior-level depth — I'm catching up to where recruiters already think I am.
-- Be blunt. Tell me when I'm faking understanding or hand-waving.
+The section above describes the system being built. It is **not** what the code
+does today. Do not confuse the two — that confusion is exactly what made the
+previous CLAUDE.md useless.
+
+What exists today, in `backend/`:
+
+- A scheduled poller. APScheduler fires `features/monitor/service.tick()` every
+  `POLL_MINUTES`, which GETs `{LIFEOS_API_URL}/api/v1/misses` from **life-os, a
+  separate service in a different repo**, and escalates anything overdue.
+- A three-level escalation ladder (`features/monitor/escalation.py`) — pure,
+  I/O-free, quiet-hours aware. This is the closest thing to a verdict function
+  that exists, and it is already the right shape: deterministic, no LLM.
+- Idempotent delivery. One row per `(log_date, goal_id, level)` in
+  `notifications`, enforced by a DB unique constraint, so a step never re-fires.
+- Twilio WhatsApp delivery, plus voice/TwiML that is built but off
+  (`ENABLE_CALLS=False`).
+- LLM message copy via OpenRouter/DeepSeek, with a template fallback when the
+  call fails. Already correctly confined to copy — it decides nothing.
+- 29 tests over escalation, dedupe, quiet hours, and delivery-failure handling.
+
+The gap between this and the contract above:
+
+- There is **no post-URL submission path**. Facts currently enter the system
+  from life-os, not from Diego submitting evidence. This is the single biggest
+  divergence from the design principle.
+- There is **no event log and no derived streak**. Nothing folds an append-only
+  log.
+- There is **no external liveness check**. If this process dies, nothing notices.
+- The 2 PM weekday obligation and the 200 MXN / 30-day rules are not modelled
+  anywhere in code.
+
+## Commands
+
+```bash
+cd backend
+source venv/bin/activate
+
+alembic upgrade head            # apply schema. NOT create_all() — that is gone.
+alembic revision --autogenerate -m "what changed"
+
+uvicorn main:app --reload       # http://127.0.0.1:8000  (docs at /docs)
+pytest                          # 29 tests, sqlite-backed, no network
+
+curl -X POST localhost:8000/debug/tick   # fire a poll now (APP_ENV=dev only)
+```
+
+Config lives in one place: `core/config.py`. Copy `.env.example` to `.env`.
+Missing required vars raise at import — the app refuses to boot rather than
+half-run.
+
+## Working agreement
+
+- Hands on keyboard = Diego. Coach through the implementation, ask leading
+  questions first; give the smallest hint that unblocks, not the full solution.
+- Tie every explanation to the specific code being written. No generic lectures.
+- Default to senior-level depth. Be blunt about hand-waving or faked
+  understanding.
+- If a concept is bigger than one 90-minute block, say so and split it.

@@ -14,8 +14,16 @@ class Settings(BaseSettings):
 
     # DB
     DATABASE_URL: str
-    
-    
+
+    # Fail loud, fail fast: an unreachable DB should raise in seconds, not hang.
+    DB_CONNECT_TIMEOUT: int = 10   # seconds; postgres only
+    DB_POOL_RECYCLE: int = 1800    # seconds; stay under pooler idle timeouts
+    SQL_ECHO: bool = False         # true → log every SQL statement (noisy; debugging only)
+
+    # Observability
+    LOG_LEVEL: str = "INFO"        # DEBUG | INFO | WARNING | ERROR
+
+
     # WA
     TWILIO_ACCOUNT_SID: str
     TWILIO_AUTH_TOKEN: str

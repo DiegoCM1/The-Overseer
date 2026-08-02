@@ -24,7 +24,20 @@ async def tick() -> None:
     except Exception as e:
         log.warning("Overseer tick: could not reach life-os: %s", e)
         return
-    await asyncio.to_thread(_process, data)
+
+    # _process runs in a worker thread, so an exception here does NOT surface as a
+    # normal traceback — it propagates back through APScheduler's executor. Catch it
+    # so one malformed payload can't kill the heartbeat, and log enough to diagnose:
+    # the life-os contract is unvalidated, so a shape change lands here as a KeyError.
+    try:
+        await asyncio.to_thread(_process, data)
+    except Exception:
+        log.exception(
+            "Overseer tick failed while processing life-os payload "
+            "(top-level keys=%s, goal count=%s)",
+            sorted(data) if isinstance(data, dict) else type(data).__name__,
+            len(data.get("goals", [])) if isinstance(data, dict) else "n/a",
+        )
 
 
 def _process(data: dict) -> None:
