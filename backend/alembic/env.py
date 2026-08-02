@@ -17,6 +17,7 @@ from core.db import Base
 # Importing the models is what populates Base.metadata. Without this import,
 # autogenerate sees an empty model set and cheerfully generates a migration that
 # drops every table.
+from features.enforcement.ledger import Event  # noqa: F401
 from features.monitor.models import Notification  # noqa: F401
 
 config = context.config

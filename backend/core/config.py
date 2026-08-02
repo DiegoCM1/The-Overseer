@@ -28,7 +28,19 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str
     TWILIO_AUTH_TOKEN: str
     TWILIO_WHATSAPP_FROM: str
-    TWILIO_WHATSAPP_TO: str
+    TWILIO_WHATSAPP_TO: str          # Diego — the one under obligation
+
+    # ---- Enforcement (the bet) ----
+    # Daniel is the counterparty. His WhatsApp thread doubles as an out-of-band
+    # replica of the history that Diego cannot rewrite, so this is load-bearing.
+    TWILIO_WHATSAPP_DANIEL: str = ""
+
+    # healthchecks.io check URL. Pinged after every judgment run; if the Overseer
+    # dies, healthchecks notifies Daniel directly. Without it a crashed server is
+    # worth 200 MXN to Diego, which is a terrible incentive to leave lying around.
+    HEALTHCHECKS_URL: str = ""
+
+    HEARTBEAT_HOUR: int = 20         # local hour for Daniel's daily streak report
 
     # life-os integration (the system of record the Overseer polls)
     LIFEOS_API_URL: str = "http://localhost:8000"

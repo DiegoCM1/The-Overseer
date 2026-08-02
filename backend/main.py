@@ -7,6 +7,8 @@ from core.config import settings
 from core.db import safe_db_url
 from core.logging_config import setup_logging
 from core.scheduler import start_scheduler, stop_scheduler
+from features.enforcement.ledger import Event  # noqa: F401  (registers the table)
+from features.enforcement.router import router as webhooks_router
 from features.monitor.models import Notification  # noqa: F401  (registers the table)
 from features.monitor.service import tick
 from features.voice.router import router as voice_router
@@ -36,6 +38,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="The Overseer", lifespan=lifespan)
 app.include_router(voice_router)
+app.include_router(webhooks_router)  # the ONLY write path into the ledger
 
 
 @app.get("/")
