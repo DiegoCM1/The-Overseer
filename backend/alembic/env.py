@@ -14,11 +14,10 @@ from sqlalchemy import engine_from_config, pool
 from core.config import settings
 from core.db import Base
 
-# Importing the models is what populates Base.metadata. Without this import,
-# autogenerate sees an empty model set and cheerfully generates a migration that
-# drops every table.
-from features.enforcement.ledger import Event  # noqa: F401
-from features.monitor.models import Notification  # noqa: F401
+# Importing the models is what populates Base.metadata. There are NO models right
+# now, so Base.metadata is empty — which means `alembic revision --autogenerate`
+# would cheerfully emit a migration that DROPS every existing table. Import each
+# model here as soon as one exists, and do not autogenerate until then.
 
 config = context.config
 
